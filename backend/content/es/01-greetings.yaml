@@ -1,0 +1,19 @@
+id: greetings
+title: Greetings
+emoji: 👋
+words:
+  hola: { es: hola, en: hello, emoji: 👋 }
+  adios: { es: adiós, en: goodbye, emoji: 🚶 }
+  si: { es: sí, en: "yes", emoji: 👍 }
+  "no": { es: "no", en: "no", emoji: 👎 }
+  gracias: { es: gracias, en: thank you, emoji: 🙏 }
+  por_favor: { es: por favor, en: please, emoji: 🥺 }
+  buenos_dias: { es: buenos días, en: good morning, emoji: 🌅 }
+  buenas_noches: { es: buenas noches, en: good night, emoji: 🌙 }
+lessons:
+  - id: greetings-1
+    title: Hello and goodbye
+    words: [hola, adios, si, "no"]
+  - id: greetings-2
+    title: Being polite
+    words: [gracias, por_favor, buenos_dias, buenas_noches]

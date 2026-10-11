@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { LandingPage } from "./pages/LandingPage";
 import { LearnPage } from "./pages/LearnPage";
+import { LessonPage } from "./pages/LessonPage";
 import { LoginPage } from "./pages/LoginPage";
 import { ParentPage } from "./pages/ParentPage";
 import { RegisterPage } from "./pages/RegisterPage";
@@ -21,6 +22,7 @@ export default function App() {
       </Route>
       <Route element={<ChildRoute />}>
         <Route path="/learn" element={<LearnPage />} />
+        <Route path="/lesson/:lessonId" element={<LessonPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

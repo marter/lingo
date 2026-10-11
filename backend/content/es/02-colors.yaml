@@ -1,0 +1,19 @@
+id: colors
+title: Colors
+emoji: 🎨
+words:
+  rojo: { es: rojo, en: red, emoji: 🔴 }
+  azul: { es: azul, en: blue, emoji: 🔵 }
+  verde: { es: verde, en: green, emoji: 🟢 }
+  amarillo: { es: amarillo, en: yellow, emoji: 🟡 }
+  naranja: { es: naranja, en: orange, emoji: 🟠 }
+  morado: { es: morado, en: purple, emoji: 🟣 }
+  negro: { es: negro, en: black, emoji: ⚫ }
+  blanco: { es: blanco, en: white, emoji: ⚪ }
+lessons:
+  - id: colors-1
+    title: Rainbow colors
+    words: [rojo, azul, verde, amarillo]
+  - id: colors-2
+    title: More colors
+    words: [naranja, morado, negro, blanco]

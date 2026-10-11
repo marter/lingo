@@ -1,47 +1,35 @@
-import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { fetchChildMe } from "../api/child";
-import { isUnauthorized } from "../api/client";
-import { useSession } from "../session/SessionContext";
+import { Link } from "react-router-dom";
+import { fetchCourse } from "../api/child";
+import { KidHeader } from "../components/KidHeader";
 
-/** A kid's home. Lessons arrive in a later step; for now it just greets them. */
+/** A kid's home: the course as a winding path of lessons, unit by unit. */
 export function LearnPage() {
-  const { endChild } = useSession();
-  const navigate = useNavigate();
-  const me = useQuery({ queryKey: ["child", "me"], queryFn: fetchChildMe, retry: false });
-
-  // Expired, or the profile was removed: end the session and ChildRoute shows the picker.
-  const expired = me.isError && isUnauthorized(me.error);
-  useEffect(() => {
-    if (expired) endChild();
-  }, [expired, endChild]);
-
-  function switchKid() {
-    endChild();
-    navigate("/who");
-  }
+  const course = useQuery({ queryKey: ["child", "course"], queryFn: fetchCourse });
 
   return (
     <main className="page">
-      <header className="kid-header">
-        <span className="kid-header-avatar" aria-hidden="true">
-          {me.data?.avatar}
-        </span>
-        <span className="kid-header-name">{me.data?.nickname}</span>
-        <button type="button" className="btn btn-ghost btn-small" onClick={switchKid}>
-          Switch
-        </button>
-      </header>
-      {me.data && (
-        <section className="page-center-block">
-          <div className="mascot" aria-hidden="true">
-            🦜
-          </div>
-          <h1>¡Hola, {me.data.nickname}!</h1>
-          <p className="lead">Your first Spanish lessons are on their way. 🎒</p>
+      <KidHeader />
+      {course.isLoading && <p className="hint">Loading…</p>}
+      {course.isError && <p className="form-error">Couldn't load your lessons. Try again.</p>}
+      {course.data?.map((unit, unitIndex) => (
+        <section key={unit.id} className="unit">
+          <h2 className="unit-banner">
+            <span aria-hidden="true">{unit.emoji}</span> Unit {unitIndex + 1}: {unit.title}
+          </h2>
+          <ol className="lesson-path">
+            {unit.lessons.map((lesson, i) => (
+              <li key={lesson.id} className={`lesson-stop lesson-stop-${i % 4}`}>
+                <Link to={`/lesson/${lesson.id}`} className="lesson-bubble">
+                  <span aria-hidden="true">{unit.emoji}</span>
+                  <span className="visually-hidden">Start</span>
+                </Link>
+                <span className="lesson-title">{lesson.title}</span>
+              </li>
+            ))}
+          </ol>
         </section>
-      )}
+      ))}
     </main>
   );
 }
