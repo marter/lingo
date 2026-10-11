@@ -11,6 +11,21 @@ voices or locations. No ads, no trackers or third-party scripts (fonts are bundl
 chat, nothing public. Parents can delete a child's data or the whole account at any time.
 Keep it that way: new features must not collect more from kids.
 
+## Accounts and devices
+
+Three token scopes (`backend/app/core/security.py`), so a kid holding a parent's device
+can't reach the parent area:
+
+- **family**: stays on the device after a parent logs in. Lists the kids' nicknames and
+  avatars, starts a kid's session, and checks the PIN. Nothing else.
+- **parent**: the parent area (profiles, PIN). Comes from the password or the 4-digit PIN,
+  lasts 30 minutes, and is kept in sessionStorage. The PIN locks for 15 minutes after 5
+  wrong tries.
+- **child**: one kid's session; only ever sees that kid's data.
+
+A parent must confirm their email before adding kids. In dev, the confirmation email is
+printed in the backend logs (`docker compose logs backend`).
+
 ## Stack
 
 - **Backend**: FastAPI, SQLAlchemy 2, Alembic, Postgres 16, `uv`, ruff, mypy, pytest
