@@ -1,0 +1,26 @@
+id: animals
+title: Animals
+emoji: 🐾
+words:
+  perro: { es: el perro, en: the dog, emoji: 🐶 }
+  gato: { es: el gato, en: the cat, emoji: 🐱 }
+  pajaro: { es: el pájaro, en: the bird, emoji: 🐦 }
+  pez: { es: el pez, en: the fish, emoji: 🐟 }
+  caballo: { es: el caballo, en: the horse, emoji: 🐴 }
+  vaca: { es: la vaca, en: the cow, emoji: 🐮 }
+  cerdo: { es: el cerdo, en: the pig, emoji: 🐷 }
+  pato: { es: el pato, en: the duck, emoji: 🦆 }
+  raton: { es: el ratón, en: the mouse, emoji: 🐭 }
+  conejo: { es: el conejo, en: the rabbit, emoji: 🐰 }
+  oso: { es: el oso, en: the bear, emoji: 🐻 }
+  leon: { es: el león, en: the lion, emoji: 🦁 }
+lessons:
+  - id: animals-1
+    title: Pets
+    words: [perro, gato, pajaro, pez]
+  - id: animals-2
+    title: On the farm
+    words: [caballo, vaca, cerdo, pato]
+  - id: animals-3
+    title: In the wild
+    words: [raton, conejo, oso, leon]

@@ -24,3 +24,31 @@ export interface ProfileOptions {
   age_bands: AgeBand[];
   max_children: number;
 }
+
+export interface Word {
+  id: string;
+  es: string;
+  en: string;
+  emoji: string;
+}
+
+export interface LessonSummary {
+  id: string;
+  title: string;
+  word_count: number;
+}
+
+export interface Unit {
+  id: string;
+  title: string;
+  emoji: string;
+  lessons: LessonSummary[];
+}
+
+export interface Lesson {
+  id: string;
+  title: string;
+  unit_id: string;
+  unit_title: string;
+  words: Word[];
+}
