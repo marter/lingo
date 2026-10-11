@@ -1,0 +1,9 @@
+{
+  "name": "Lingo",
+  "short_name": "Lingo",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f9ff",
+  "theme_color": "#2b6fe0",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

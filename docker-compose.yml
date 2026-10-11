@@ -1,0 +1,57 @@
+# Dev stack. Host ports are offset from volunteer-scheduler (5432/8000/5173) and
+# fake-sportsbook (5433/8001/5174) so all three can run at once.
+#
+# Explicit project name, distinct from deploy/docker-compose.prod.yml's "lingo": with the
+# same name, running the prod file locally would silently replace these dev containers.
+name: lingo-dev
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: lingo
+      POSTGRES_PASSWORD: lingo
+      POSTGRES_DB: lingo
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lingo -d lingo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    command: sh -c "uv sync --frozen --no-dev && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/app"
+    volumes:
+      - ./backend:/app
+      - backend_venv:/app/.venv
+    ports:
+      - "8002:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://lingo:lingo@db:5432/lingo
+      CORS_ORIGINS: '["http://localhost:5175"]'
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    image: node:24-slim
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host --port 5175"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - "5175:5175"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8002
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
+  backend_venv:
+  frontend_node_modules:

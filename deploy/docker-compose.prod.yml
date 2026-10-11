@@ -1,0 +1,72 @@
+# Production stack for the shared server. No ports are published: the shared Caddy
+# container (its config lives in the fake-sportsbook repo's deploy/caddy/) reaches backend
+# and frontend over the external "web" network.
+#
+#   docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env.prod up -d --build
+
+# Explicit project name: otherwise Compose uses the folder name ("deploy"), which would
+# collide with other apps on this server that use the same layout.
+name: lingo
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lingo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in deploy/.env.prod}
+      POSTGRES_DB: lingo
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lingo -d lingo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    logging: *logging
+
+  backend:
+    build: ../backend
+    restart: unless-stopped
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2"
+    environment:
+      ENVIRONMENT: production
+      DATABASE_URL: postgresql+psycopg://lingo:${POSTGRES_PASSWORD}@db:5432/lingo
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?set in deploy/.env.prod}
+      MAX_USERS: ${MAX_USERS:-10}
+      APP_BASE_URL: https://${LINGO_HOST}
+      CORS_ORIGINS: '["https://${LINGO_HOST:?set in deploy/.env.prod}"]'
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      default:
+      web:
+        aliases: [lingo-backend]
+    logging: *logging
+
+  frontend:
+    build: ../frontend
+    restart: unless-stopped
+    networks:
+      web:
+        aliases: [lingo-frontend]
+    logging: *logging
+
+volumes:
+  db_data:
+
+networks:
+  web:
+    external: true

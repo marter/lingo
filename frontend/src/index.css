@@ -1,0 +1,113 @@
+/* Design tokens. Kid-friendly: big type, round corners, bright but contrast-checked colors.
+   Fonts are bundled (no third-party requests), see main.tsx. */
+:root {
+  --font: "Nunito Variable", ui-rounded, system-ui, sans-serif;
+
+  --bg: #f6f9ff;
+  --surface: #ffffff;
+  --text: #1c2340;
+  --text-muted: #4f5878;
+  --border: #d7def0;
+
+  --primary: #2b6fe0; /* buttons, links */
+  --primary-press: #1f58b8;
+  --on-primary: #ffffff;
+  --sun: #ffc93c; /* stars, highlights */
+  --success: #1f8a4c;
+  --success-bg: #e3f6ea;
+  --try-again: #c2410c; /* gentle "try again", never red */
+  --try-again-bg: #fff1e6;
+
+  --radius: 20px;
+  --radius-sm: 12px;
+  --tap: 56px; /* minimum tap target for kids */
+  --shadow: 0 4px 0 var(--border);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141a2b;
+    --surface: #1e263b;
+    --text: #eef2ff;
+    --text-muted: #aab4d0;
+    --border: #33405f;
+
+    --primary: #6aa2ff;
+    --primary-press: #4f8bf0;
+    --on-primary: #0d1424;
+    --sun: #ffd25e;
+    --success: #5ad18b;
+    --success-bg: #173426;
+    --try-again: #ffa166;
+    --try-again-bg: #3a2416;
+
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  font-size: max(16px, 1rem); /* never below 16px, so iOS doesn't zoom */
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+}
+
+.page {
+  max-width: 720px; /* comfortable on tablets too */
+  margin: 0 auto;
+  padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+    max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+
+.page-center {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.mascot {
+  font-size: 96px;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.lead {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  margin: 0 0 1.5rem;
+}
+
+.status {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  min-height: 1.5em;
+}
