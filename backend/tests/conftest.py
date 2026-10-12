@@ -90,3 +90,32 @@ def add_child(client: TestClient, parent_headers: dict[str, str], nickname: str 
     )
     assert response.status_code == 201, response.text
     return response.json()["id"]
+
+
+def child_headers(client: TestClient, email: str = "pat@example.com") -> dict[str, str]:
+    """Registers a parent with one kid and returns that kid's session headers."""
+    tokens = register(client, email)
+    child_id = add_child(client, tokens["parent"])
+    session = client.post(f"/api/family/children/{child_id}/session", headers=tokens["family"])
+    assert session.status_code == 200, session.text
+    return bearer(session.json()["token"])
+
+
+def finish(client: TestClient, headers: dict[str, str], lesson_id: str, right: int = 8) -> None:
+    response = client.post(
+        f"/api/child/lessons/{lesson_id}/complete",
+        json={"first_try_correct": right, "question_count": 10},
+        headers=headers,
+    )
+    assert response.status_code == 204, response.text
+
+
+def finish_all_before(client: TestClient, headers: dict[str, str], lesson_id: str) -> None:
+    from app.content import get_course
+
+    for unit in get_course().units:
+        for lesson in unit.lessons:
+            if lesson.id == lesson_id:
+                return
+            finish(client, headers, lesson.id)
+    raise AssertionError(f"no lesson {lesson_id}")
