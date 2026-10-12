@@ -4,14 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.content import ContentError, get_course, load_course
-from tests.conftest import add_child, bearer, register
-
-
-def child_headers(client: TestClient) -> dict[str, str]:
-    tokens = register(client)
-    child_id = add_child(client, tokens["parent"])
-    session = client.post(f"/api/family/children/{child_id}/session", headers=tokens["family"])
-    return bearer(session.json()["token"])
+from tests.conftest import child_headers, finish_all_before, register
 
 
 def test_shipped_content_loads() -> None:
@@ -34,8 +27,18 @@ def test_course_and_lesson_endpoints(client: TestClient) -> None:
         "id": "greetings-1",
         "title": "Hello and goodbye",
         "word_count": 4,
+        "state": "current",
     }
 
+    lesson = client.get("/api/child/lessons/greetings-1", headers=headers)
+    assert lesson.status_code == 200
+    assert lesson.json()["completed"] is False
+    assert client.get("/api/child/lessons/animals-1", headers=headers).status_code == 403
+
+
+def test_lesson_words_come_from_content(client: TestClient) -> None:
+    headers = child_headers(client)
+    finish_all_before(client, headers, "animals-1")
     lesson = client.get("/api/child/lessons/animals-1", headers=headers)
     assert lesson.status_code == 200
     body = lesson.json()

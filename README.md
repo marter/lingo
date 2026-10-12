@@ -11,6 +11,10 @@ voices or locations. No ads, no trackers or third-party scripts (fonts are bundl
 chat, nothing public. Parents can delete a child's data or the whole account at any time.
 Keep it that way: new features must not collect more from kids.
 
+The only learning data kept is which lessons a kid finished, when, and how many questions
+they got right the first time. Spoken Spanish comes from the browser's own text-to-speech,
+so no audio is fetched from or sent to anyone.
+
 ## Accounts and devices
 
 Three token scopes (`backend/app/core/security.py`), so a kid holding a parent's device

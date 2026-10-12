@@ -32,10 +32,13 @@ export interface Word {
   emoji: string;
 }
 
+export type LessonState = "done" | "current" | "locked";
+
 export interface LessonSummary {
   id: string;
   title: string;
   word_count: number;
+  state: LessonState;
 }
 
 export interface Unit {
@@ -51,4 +54,10 @@ export interface Lesson {
   unit_id: string;
   unit_title: string;
   words: Word[];
+  completed: boolean;
+}
+
+export interface LessonResult {
+  first_try_correct: number;
+  question_count: number;
 }

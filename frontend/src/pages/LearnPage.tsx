@@ -19,12 +19,29 @@ export function LearnPage() {
           </h2>
           <ol className="lesson-path">
             {unit.lessons.map((lesson, i) => (
-              <li key={lesson.id} className={`lesson-stop lesson-stop-${i % 4}`}>
-                <Link to={`/lesson/${lesson.id}`} className="lesson-bubble">
-                  <span aria-hidden="true">{unit.emoji}</span>
-                  <span className="visually-hidden">Start</span>
-                </Link>
-                <span className="lesson-title">{lesson.title}</span>
+              <li
+                key={lesson.id}
+                className={`lesson-stop lesson-stop-${i % 4} lesson-${lesson.state}`}
+              >
+                {lesson.state === "locked" ? (
+                  <span className="lesson-bubble" aria-hidden="true">
+                    🔒
+                  </span>
+                ) : (
+                  <Link
+                    to={`/lesson/${lesson.id}`}
+                    className="lesson-bubble"
+                    aria-current={lesson.state === "current" ? "step" : undefined}
+                    aria-label={`${lesson.state === "done" ? "Play again" : "Start"}: ${lesson.title}`}
+                  >
+                    <span aria-hidden="true">{lesson.state === "done" ? "✓" : unit.emoji}</span>
+                  </Link>
+                )}
+                {lesson.state === "current" && <span className="lesson-start">Start</span>}
+                <span className="lesson-title">
+                  {lesson.title}
+                  {lesson.state === "locked" && <span className="visually-hidden"> (locked)</span>}
+                </span>
               </li>
             ))}
           </ol>
